@@ -1,0 +1,105 @@
+==================================================
+Assignment #4:  Theory Component (Lambda Calculus)
+==================================================
+
+Highly recommended reading:  
+ * Chapter 5.4, 5.5, 5.6 of Programming Language Foundations
+
+Consider the following language containing just pairs and unit:
+
+values:
+v ::= () | (v1, v2)
+
+expressions:
+e ::= () | (e1, e2) | let (x,y) = e1 in e2
+
+we can describe the left-to-right, call-by-value operational semantics
+of this language in two different ways:  
+ (1) using a small-step operational semantics, and
+ (2) using a big-step operational semantics 
+
+-------------------------------------------------------
+Small-Step Operational Semantics (Single-Step Relation)
+-------------------------------------------------------
+
+  e1 --> e1'
+---------------------- (SS-pair1)
+(e1, e2) --> (e1', e2)
+
+  e2 --> e2'
+---------------------- (SS-pair2)
+(v1, e2) --> (v1', e2)
+
+
+  e1 --> e1'
+----------------------------------------------- (SS-let1)
+let (x,y) = e1 in e2 --> let (x,y) = e1' in e2
+
+-------------------------------------------- (SS-let2)
+let (x,y) = (v1,v2) in e2 --> e2[v1/x][v2/y]
+
+-------------------------------------------------------
+Small-Step Operational Semantics (Multi-Step Relation)
+-------------------------------------------------------
+
+-------- (MS-reflex)
+e -->* e
+
+
+e1 --> e2    e2 -->* e3
+----------------------- (MS-trans)
+e1 -->* e3
+
+
+--------------------------------
+Big-Step Operational Semantics
+--------------------------------
+
+--------- (BS-())
+() ==> ()
+
+e1 ==> v1      e2 ==> v2
+------------------------- (BS-pair)
+(e1, e2) ==> (v1, v2)
+
+
+e1 ==> (v1, v2)       e2[v1/x][v2/y] ==> e
+------------------------------------------- (BS-let)
+let (x,y) = e1 in e2 ==> e
+
+---------
+Questions
+---------
+
+When proving theorems:
+ * Be sure to state your proof methodology at the top: "By induction on ...".
+ * Be sure to split your proofs in to proper cases.
+ * Clearly show what you can assume in each case
+ * In the body of each case, use our standard 2-column style 
+     (one column for judgements that you conclude are true/valid; 
+      one column for justifications "by rule X" or "by lemma 1...")
+
+
+Q1:  Prove the following theorem:
+
+  If e1 ==> e2 then 
+  e2 does not contain a let expression "let (x,y) = e1 in e2" within it
+
+Q2:  Prove the following theorem:
+        
+  If e ==> v then e -->* v.
+
+In doing so, you may use any of the following lemmas without proof:
+
+  Lemma 1:  If e1 -->* e1' then (e1, e2) -->* (e1', e2)
+  Lemma 2:  If e2 -->* e2' then (v, e2) -->* (v, e2')
+  Lemma 3:  If e1 -->* e1' then let (x,y) = e1 in e2 -->* let (x,y) = e1' in e2
+  Lemma 4:  If e1 -->* e2 and e2 -->* e3 then e1 -->* e3
+
+Q3:  Conjecture:
+
+        If e -->* e' then e ==> e'
+
+(a) Give a counter-example that disproves the conjecture above.
+(b) Briefly explain:  what do *all* counter-examples to the conjecture 
+    have in common?
